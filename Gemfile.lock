@@ -30,6 +30,7 @@ GEM
       bigdecimal
       rake (>= 13)
     logger (1.7.0)
+    minitest (5.25.5)
     rake (13.3.0)
     temporalio (0.5.0)
       google-protobuf (>= 3.25.0)
@@ -67,6 +68,7 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
+  minitest
   temporalio
 
 BUNDLED WITH
