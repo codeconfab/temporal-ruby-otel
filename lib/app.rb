@@ -1,5 +1,6 @@
 require 'securerandom'
 require 'temporalio/activity'
+require 'temporalio/client'
 require 'temporalio/worker'
 require 'temporalio/workflow'
 
@@ -27,6 +28,13 @@ module TemporalRubyOtel
 
   extend self
 
+  def client(server: 'localhost:7233', namespace: 'default')
+    Temporalio::Client.connect(
+      server,
+      namespace,
+    )
+  end
+
   def execute_workflow(client:, workflow:, args:, task_queue: TASK_QUEUE_NAME, id: "wf-#{SecureRandom.uuid}")
     workflow_class = WORKFLOWS[workflow]
 
@@ -38,7 +46,7 @@ module TemporalRubyOtel
     )
   end
 
-  def worker(client)
+  def worker(client = self.client)
     Temporalio::Worker.new(
       client:,
       task_queue: TASK_QUEUE_NAME,
