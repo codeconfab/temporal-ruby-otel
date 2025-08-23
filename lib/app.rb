@@ -9,6 +9,7 @@ require 'temporalio/workflow'
 OpenTelemetry::SDK.configure do |c|
   c.service_name = 'temporal-ruby-otel'
   c.use_all()
+  at_exit { OpenTelemetry.tracer_provider.shutdown }
 end
 
 module TemporalRubyOtel
@@ -45,7 +46,7 @@ module TemporalRubyOtel
     )
   end
 
-  def execute_workflow(client:, workflow:, args:, task_queue: TASK_QUEUE_NAME, id: "wf-#{SecureRandom.uuid}")
+  def execute_workflow(client: self.client, workflow:, args:, task_queue: TASK_QUEUE_NAME, id: "wf-#{SecureRandom.uuid}")
     workflow_class = WORKFLOWS[workflow]
 
     client.execute_workflow(
