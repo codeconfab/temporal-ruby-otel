@@ -2,6 +2,7 @@
 
 source "https://rubygems.org"
 
+gem "opentelemetry-sdk"
 gem "temporalio"
 
 group "test" do
