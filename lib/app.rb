@@ -1,10 +1,19 @@
 require 'securerandom'
+require 'opentelemetry/sdk'
 require 'temporalio/activity'
 require 'temporalio/client'
+require 'temporalio/contrib/open_telemetry'
 require 'temporalio/worker'
 require 'temporalio/workflow'
 
+OpenTelemetry::SDK.configure do |c|
+  c.service_name = 'temporal-ruby-otel'
+  c.use_all()
+end
+
 module TemporalRubyOtel
+  Tracer = OpenTelemetry.tracer_provider.tracer('temporal-ruby')
+
   class SayHelloActivity < Temporalio::Activity::Definition
     def execute(name)
       "Hello, #{name}!"
@@ -28,10 +37,11 @@ module TemporalRubyOtel
 
   extend self
 
-  def client(server: 'localhost:7233', namespace: 'default')
+  def client(server: 'localhost:7233', namespace: 'default', tracer: Tracer)
     Temporalio::Client.connect(
       server,
       namespace,
+      interceptors: [Temporalio::Contrib::OpenTelemetry::TracingInterceptor.new(tracer)]
     )
   end
 
