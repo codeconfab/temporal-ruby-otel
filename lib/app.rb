@@ -1,10 +1,23 @@
 require 'securerandom'
 require 'opentelemetry/sdk'
+require 'opentelemetry/exporter/otlp'
 require 'temporalio/activity'
 require 'temporalio/client'
 require 'temporalio/contrib/open_telemetry'
 require 'temporalio/worker'
 require 'temporalio/workflow'
+
+case ENV['TRACE_BACKEND']
+when 'console'
+  ENV['OTEL_TRACES_EXPORTER'] = 'console'
+when 'honeycomb'
+  api_key = ENV.fetch('HONEYCOMB_API_KEY') do |key|
+    raise KeyError, "key not found in ENV: #{key}. Add it to .env or provide it using your preferred method."
+  end
+
+  ENV['OTEL_EXPORTER_OTLP_ENDPOINT'] = 'https://api.honeycomb.io'
+  ENV['OTEL_EXPORTER_OTLP_HEADERS'] = "x-honeycomb-team=#{api_key}"
+end
 
 OpenTelemetry::SDK.configure do |c|
   c.service_name = 'temporal-ruby-otel'

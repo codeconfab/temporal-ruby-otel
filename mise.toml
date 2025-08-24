@@ -1,11 +1,31 @@
 [tools]
 ruby = '3.4.5'
 
+[vars]
+demo_command = "ruby -Ilib lib/starter.rb"
+worker_command = "ruby -Ilib lib/worker.rb"
+
 [tasks.demo]
-run = "ruby -Ilib lib/starter.rb"
+run = "{{vars.demo_command}}"
 
 [tasks.worker]
-run = "ruby -Ilib lib/worker.rb"
+run = "{{vars.worker_command}}"
+
+[tasks."console:demo"]
+env.TRACE_BACKEND="console"
+run = "{{vars.demo_command}}"
+
+[tasks."console:worker"]
+env.TRACE_BACKEND="console"
+run = "{{vars.worker_command}}"
+
+[tasks."honeycomb:demo"]
+env.TRACE_BACKEND="honeycomb"
+run = "{{vars.demo_command}}"
+
+[tasks."honeycomb:worker"]
+env.TRACE_BACKEND="honeycomb"
+run = "{{vars.worker_command}}"
 
 [env]
-OTEL_TRACES_EXPORTER="console"
+_.file = ".env"
