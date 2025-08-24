@@ -2,6 +2,7 @@
 
 source "https://rubygems.org"
 
+gem "opentelemetry-exporter-otlp"
 gem "opentelemetry-sdk"
 gem "temporalio"
 
