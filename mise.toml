@@ -1,5 +1,11 @@
 [tools]
 ruby = '3.4.5'
 
+[tasks.demo]
+run = "ruby -Ilib lib/starter.rb"
+
+[tasks.worker]
+run = "ruby -Ilib lib/worker.rb"
+
 [env]
 OTEL_TRACES_EXPORTER="console"
