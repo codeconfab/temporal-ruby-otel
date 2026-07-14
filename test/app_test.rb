@@ -9,15 +9,18 @@ class TemporalRubyOtelTest < Minitest::Test
     Temporalio::Testing::WorkflowEnvironment.start_local do |env|
       worker = TemporalRubyOtel.worker(env.client)
 
-      worker.run do
+      result = worker.run do
         result = TemporalRubyOtel.execute_workflow(
           client: env.client,
           workflow: :say_hello,
           args: 'some-name',
         )
 
-        assert_equal 'Hello, some-name!', result
       end
+
+      sleep 0.1
+
+      assert_equal 'Hello, some-name!', result
     end
   end
 end
